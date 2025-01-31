@@ -20,7 +20,7 @@ Run the following commands in sequence:
 conda create --name lobbylinks python==3.7.9 -y && conda activate lobbylinks
 bash installation.sh
 ```
-The module has been tested in python version 3.7.99 and may not work in other settings.
+The module has been tested in python version 3.7.9 and may not work in other settings.
 
 To add GPU support for the NLP routines, change the versions of `tensorflow` and `spacy` to add relevant cuda versions.
 
