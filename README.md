@@ -9,10 +9,12 @@ There are two main data structures:
 ![exxon](https://github.com/user-attachments/assets/13d997a1-4c83-47e3-92b2-8119b6737ccf)
 
 The links to legislators depend on a database maintained by GovTrack, ProPublica, and a number of other organizations (https://github.com/unitedstates/congress-legislators). To update the legislators inventory, download the most recent versions of the following files from `congress-legislators` and insert them into the folder `lobbylinks/resources`:
+
 * `legislators-current.csv`
 * `legislators-current.json`
 * `legislators-historical.csv`
 * `legislators-historical.json`
+
 It is OK to overwrite these current contents of the `resources` folder. Note that `legislators-historical` is cumulative, but `legislators-current` is not.
 
 ### Installation
