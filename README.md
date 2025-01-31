@@ -40,6 +40,8 @@ lobby_data.merge_names() #optional: merges client names (e.g. EXXON MOBIL CORPOR
 lobby_data.summary.to_csv('lobby_filings_summary.csv') # export summary data for each filing
 lobby_data.activity_summary.to_csv('lobby_filings_summary-by_activity.csv') # export summary data for each lobbying activity
 ```
+`q_auth` can be set to `None` for small tasks (e.g. with narrow search terms for a single client), but you will need an API key if pulling all filings for a given year.
+
 Income and expenditure for lobbying contracts is reported at the level of the filing (`lobby_data.summary`), while issues lobbied about and identities of involved lobbyists—including federal positions covered by the LDA , are reported at the level of the lobbying activity `lobby_data.activity_summary` Both levels of analysis may be of use depending on the analysis but money is not itemized at the level of the activit. Per-contract income is also reported in the `activity_summary` as the `lobbyist_income` and `lobbyist_expenses` columns, however since one report may encompass multiple activities, be sure not to double count. Issue codes within a contract/filing might be heterogeneous, but might be grouped together as:
 ```
 # we get lobbying activity reports
