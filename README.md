@@ -1,6 +1,6 @@
 ## LobbyLinks: Mapping the revolving door network
 
-LobbyLinks is a python package that facilitates the extraction of valuable information from the DC lobbying network, including lobbyists' links to the 
+LobbyLinks is a python package that facilitates the extraction of valuable information from the DC lobbying network, including lobbyists' links to congressional offices.
 
 There are two main data structures: 
 * The `LobbyData` object, which handles queries to the LDA database (https://lda.senate.gov/api/) and exports results to spreadsheets
@@ -44,7 +44,7 @@ lobby_data.activity_summary.to_csv('lobby_filings_summary-by_activity.csv') # ex
 ```
 `q_auth` can be set to `None` for small tasks (e.g. with narrow search terms for a single client), but you will need an API key if pulling all filings for a given year.
 
-Income and expenditure for lobbying contracts is reported at the level of the filing (`lobby_data.summary`), while issues lobbied about and identities of involved lobbyists—including federal positions covered by the LDA , are reported at the level of the lobbying activity `lobby_data.activity_summary` Both levels may be of use depending on the analysis but money is not itemized at the level of the activity. Per-contract income is also reported in the `activity_summary` as the `lobbyist_income` and `lobbyist_expenses` columns, however since one report may encompass multiple activities, be sure not to double count. Issue codes within a contract/filing might be heterogeneous, so you can group them together as:
+Income and expenditure for lobbying contracts is reported at the level of the filing (`lobby_data.summary`), while issues lobbied about and identities of involved lobbyists—including federal positions covered by the LDA , are reported at the level of the lobbying activity (`lobby_data.activity_summary`). Both levels may be of use depending on the analysis but money is not itemized at the level of the activity. Per-contract income is also reported in the `activity_summary` as the `lobbyist_income` and `lobbyist_expenses` columns, however since one report may encompass multiple activities, be sure not to double count. Issue codes within a contract/filing might be heterogeneous, so you can group them together as:
 ```
 # we get lobbying activity reports
 activity = lobbying_data.activity_summary # pandas dataframe
