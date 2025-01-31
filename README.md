@@ -2,10 +2,11 @@
 
 LobbyLinks is a python package that facilitates the extraction of valuable information from the DC lobbying network, including lobbyists' links to the 
 
-There are two main data objects: the `LobbyData` object, which handles queries to the LDA database (https://lda.senate.gov/api/) and exports results to spreadsheets, and the `LobbyLinks` object, which packages a number of natural language processing routines used to extract links between lobbyists and congressional/Senate members. A `LobbyLinks` object also supports exporting visualizations of the lobby network in a `pyvis` format:
+There are two main data structures: 
+* The `LobbyData` object, which handles queries to the LDA database (https://lda.senate.gov/api/) and exports results to spreadsheets
+* The `LobbyLinks` object, which packages a number of natural language processing routines used to extract links between lobbyists and congressional/Senate members. A `LobbyLinks` object also supports exporting visualizations of the lobby network in a `pyvis` format:
 
 ![exxon](https://github.com/user-attachments/assets/13d997a1-4c83-47e3-92b2-8119b6737ccf)
-
 
 The links to legislators depend on a database maintained by GovTrack, ProPublica, and a number of other organizations (https://github.com/unitedstates/congress-legislators). To update the legislators inventory, download the most recent versions of the following files from `congress-legislators` and insert them into the folder `lobbylinks/resources`:
 * `legislators-current.csv`
