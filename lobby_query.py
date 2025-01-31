@@ -6,7 +6,7 @@ from collections import defaultdict
 from lobbylinks.resources.handlers import IssueCodes, Legislators 	#utilities for handling resources
 from lobbylinks import LobbyData, LobbyLinks	#core utilities
 
-q_auth = (api_username, api_passkey) #credentials for database query
+q_auth = None #swap in credentials for LDA API (needed for large queries)
 # register for an API key here: https://lda.senate.gov/api/register/
 
 filing_year = [2022, 2024]
