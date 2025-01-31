@@ -32,7 +32,7 @@ from lobbylinks import LobbyData
 q_auth = (my_api_username, my_api_key)
 
 filing_year = [ 2024 ]
-lobby_data = LobbyData(filing_year=filing_year)
+lobby_data = LobbyData(filing_year=filing_year) # scrape all filings for 2024. May take several hours.
 groupby(['registrant_id' , 'filing_year', 'client', 'client_industry']).agg({'lobbyist_income': 'first', 'lobbyist_expenses': 'first', 'general_issue_code': set, 'general_issue': set})
 lobby_data.merge_names() #optional: merges client names (e.g. EXXON MOBIL CORPORATE --> EXXON MOBIL)
 
