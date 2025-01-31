@@ -33,12 +33,24 @@ q_auth = (my_api_username, my_api_key)
 
 filing_year = [ 2024 ]
 lobby_data = LobbyData(filing_year=filing_year)
-
+groupby(['registrant_id' , 'filing_year', 'client', 'client_industry']).agg({'lobbyist_income': 'first', 'lobbyist_expenses': 'first', 'general_issue_code': set, 'general_issue': set})
 lobby_data.merge_names() #optional: merges client names (e.g. EXXON MOBIL CORPORATE --> EXXON MOBIL)
 
 lobby_data.summary.to_csv('lobby_filings_summary.csv') # export summary data for each filing
 lobby_data.activity_summary.to_csv('lobby_filings_summary-by_activity.csv') # export summary data for each lobbying activity
 ```
-Income and expenditure for lobbying contracts is reported at the level of the filing (`lobby_data.summary`), while issues lobbied about and identities of involved lobbyists—including federal positions covered by the LDA , are reported at the level of the lobbying activity `lobby_data.activity_summary`. Both levels of analysis may be of use depending on the analysis.
-
+Income and expenditure for lobbying contracts is reported at the level of the filing (`lobby_data.summary`), while issues lobbied about and identities of involved lobbyists—including federal positions covered by the LDA , are reported at the level of the lobbying activity `lobby_data.activity_summary`. Both levels of analysis may be of use depending on the analysis. Per-contract income is also reported in the `activity_summary` as the `lobbyist_income` and `lobbyist_expenses` columns, however since one report may encompass multiple activities, be sure not to double count. Issue codes within a contract/filing might be heterogeneous, but might be grouped together as:
+```
+# we get lobbying activity reports
+activity = lobbying_data.activity_summary # pandas dataframe
+# group activity reports by same filings, but aggregating the topics to a set
+grouped_activity = activity.groupby(['registrant_id' ,
+                                    'filing_year',
+                                    'client',
+                                    'client_industry']).agg({'lobbyist_income': 'first',
+                                                             'lobbyist_expenses': 'first',
+                                                             'general_issue_code': set,
+                                                             'general_issue': set})
+```
+which exports the activity data to a new dataframe with a set of issue codes associated with each filing and its spending amount.
 
