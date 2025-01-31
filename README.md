@@ -29,7 +29,7 @@ To add GPU support for the NLP routines, change the versions of `tensorflow` and
 
 ### Using the package
 
-See `lobby_query.py` for example usage. The parameter set used for API calls to the LDA database is the same as that documented at the LDA website (see `lobby_query_parameters_guide.pdf` for a list of fields which can be used to narrow a query). For a broad query for all filings for a given year, do the following:
+See `lobby_query.py` for example usage. The parameter set used for API calls to the LDA database is the same as that documented at the LDA website (see `lobby_query_parameters_guide.pdf` for a list of fields which can be used to narrow a query). For a broad query of all filings for a given year, do the following:
 ```
 from lobbylinks import LobbyData
 q_auth = (my_api_username, my_api_key)
