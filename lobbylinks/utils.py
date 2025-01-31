@@ -126,7 +126,7 @@ def _is_initials(name):
    return re.match(initials_re, nsplit[0])
 
 def _has_roman_suffix(name):
-  #detect strings prefixed with initials, which
+  #detects strings suffixed with roman numerals (Joe Manchin III)
   #fuzzy name matching fails on
   nsplit = name.split()
   romans_re = '(([IXV]\.){1,4}|([IXV]){1,4})'
@@ -135,7 +135,7 @@ def _has_roman_suffix(name):
 
 
 def _has_numerical_suffix(name):
-  #detects strings suffixed with year suffix
+  #detects strings suffixed with years
   #(e.g. Sanders 1991-2002), which fuzzy
   #name matching fails on
   nsplit = name.split()
@@ -178,6 +178,7 @@ def fuzzy_company_match(company_list):
   #using exact-match heuristics and fuzzywuzzy utilities
   import fuzzywuzzy
   #@@@@@@@@@@@@@@@@@@@@@@@@@@@@ NEXT EXPANSION @@@@@@@@@@@@@@@@@@
+  raise NotImplementedError
 
 
 
@@ -210,6 +211,10 @@ def get_filing_summary(filing):
                                                  filing_period)
   summary_data['filing_type'] = (filing.filing_type_display)
   summary_data['filing_id'] = (filing.filing_uuid)
+  summary_data['client_state'] = (filing.client.state)
+  summary_data['client_country'] = (filing.client.country)
+  summary_data['registrant_zip'] = (filing.registrant.zip)
+  
   return summary_data
 
 def get_activity_summary(activity):
