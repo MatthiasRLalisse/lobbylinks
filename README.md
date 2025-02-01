@@ -48,8 +48,11 @@ Income and expenditure for lobbying contracts is reported at the level of the fi
 # we get lobbying activity reports
 activity = lobbying_data.activity_summary # pandas dataframe
 # group activity reports by same filings, but aggregating the topics to a set
-grouped_activity = activity.groupby(['registrant_id' ,
+grouped_activity = activity.groupby([
+                                    'filing_id',
+                                    'registrant_id' ,
                                     'filing_year',
+                                    'filing_period',
                                     'client',
                                     'client_industry']).agg({'lobbyist_income': 'first',
                                                              'lobbyist_expenses': 'first',
