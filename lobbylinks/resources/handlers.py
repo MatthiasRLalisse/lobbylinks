@@ -78,10 +78,10 @@ crp2fec_id_resource = os.path.join(path, 'crp_cand_id_map.csv')
 manual_id_resource = os.path.join(path, 'leg_ids_manual.csv')
 
 
-with open(historical_leg_resource, 'r') as f:
-  o = f.read()
+#with open(historical_leg_resource, 'r') as f:
+#  o = f.read()
 
-print(historical_leg_resource)
+#print(historical_leg_resource)
 
 class TimeOutHandler(object):
   """Class to handle timeouts. Pass unexecuted function (e.g. 
@@ -256,7 +256,7 @@ def match_nicknames(name, nicknamer, legislators_data):
 #match_nicknames('T. Cotton', legislators)
 
 class Legislators(object):
-  """dict-like object to handle legislator names, parties, details, etc\n
+  """list-like object to handle legislator names, parties, details, etc\n
   by default, merges current legislators and historical legislators, house & senate"""
   def __init__(self, sourcefiles= \
                      [ historical_leg_resource, 
@@ -265,7 +265,9 @@ class Legislators(object):
                      min_year=1990, 
                      max_year=9999, 
                      _filter=lambda l: True, 
-                     enable_matching=True):
+                     enable_matching=True,
+                     validate_cand_ids=False, # for devs, when updating IDs in the CAND_ID system for linking to FEC identifiers
+                     ):
     if type(sourcefiles) == str: sourcefiles = [ sourcefiles ]
     self.min_year = str(min_year)
     self.max_year = str(max_year)
@@ -352,11 +354,12 @@ class Legislators(object):
         cand_ids = sorted(list(set([ fecid2merged_id[s] for s in leg.id.fec \
                                                     if s in fecid2merged_id ])))
         leg.id['CAND_ID'] = cand_ids
-        if len(cand_ids) > 1:
-            print(f'found multiple candidate ID matches for {leg.name}: {cand_ids}')
-            #except KeyError:
-        elif len(cand_ids) < 1:
-            print(f'missing candidate IDs for {leg.name}: {leg.id.fec}')
+        if validate_cand_ids:
+            if len(cand_ids) > 1:
+                print(f'found multiple candidate ID matches for {leg.name}: {cand_ids}')
+                #except KeyError:
+            elif len(cand_ids) < 1:
+                print(f'missing candidate IDs for {leg.name}: {leg.id.fec}')
       
       new_entries = {}
       for idtype, idval in leg.id.items():
@@ -376,7 +379,6 @@ class Legislators(object):
         except (KeyError,TypeError):
           pass
       leg.id.update(new_entries)
-      #if len(new_entries) > 0: print(leg.name, new_entries)
       
       #create list of names for each legislator
       for legislator in self:
@@ -388,7 +390,7 @@ class Legislators(object):
       leg['was_house'] = any( term.type == 'rep' for term in leg.terms )
       leg['was_senate'] = any( term.type == 'sen' for term in leg.terms )
       if load_executive:
-          leg['was_exec'] = any( term.type in ['prez', 'vizeprez'] for term in leg.terms )
+          leg['was_exec'] = any( term.type in ['prez', 'viceprez'] for term in leg.terms )
       
       if leg.was_house:
         first_house_start = min([ term.start for term in leg.terms if term.type == 'rep' ])
@@ -399,7 +401,7 @@ class Legislators(object):
       
       if load_executive:
         if leg.was_exec:
-          first_exec_start = min([ term.start for term in leg.terms if term.type in ['prez', 'vizeprez'] ])
+          first_exec_start = min([ term.start for term in leg.terms if term.type in ['prez', 'viceprez'] ])
           leg['first_exec_term_start'] = first_exec_start
       
       first_term_start = min([ term.start for term in leg.terms ])
@@ -586,9 +588,15 @@ class Legislators(object):
     if filing_year is None: year_is_valid = np.ones(len(leg_start_years))
     else: year_is_valid = filing_year >= np.array(leg_start_years)
     
-    #score names. if it's only a 1-word name (last_name=True), only use exact match
-    #this avoids common errors where the machine learning matcher
-    #systematically has trouble, e.g. matching 'Asst' to 'Margaret Wood Hassan'
+    # control flow:
+    # prefer HMNI (siamese network name-matcher) when a full name is provided
+    # default to string-distance matchers ('jaro-winkler') if no match and allow_string_matches=True
+    # if last name only, require exact match
+    # if a chamber is provided ('Rep' or 'Sen'), the search is constrained to legislators from that chamber
+    
+    #Score names: 
+    # if it's only a 1-word name (last_name=True), only use exact match
+    # NB: the machine learning matcher requires first- and last-name for efficacy
     if last_name: 
       name = unidecode(name.lower())
       scores = self.score_names(name, target_names=names, exact=last_name)
