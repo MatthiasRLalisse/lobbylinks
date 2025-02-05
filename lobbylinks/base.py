@@ -24,7 +24,7 @@ from .utils import TimeOutHandler, DummyTimeout, build_queries, \
 #minimize tensorflow printouts
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-#numerical imports
+#data processing inputs
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -498,12 +498,14 @@ class LobbyLinks(object):
   """legislators from min_year up to the present.\n"""
   """\tverbose_build - Boolean, False by default. Prints name extraction and"""
   """matching results. Good for spot-checking extraction outputs."""
-  def __init__(self, data, save_file=None, legislators_handler=None, 
+  def __init__(self, data=None, save_file=None, legislators_handler=None, 
                            issue_codes=None, verbose_build=False, 
                            merge_names=True, spacy_model='en_core_web_trf', 
                            companyMatcher=CompanyMatcher, ninja_postproc=True, 
                            graph=None):
     assert isinstance(data, LobbyData) or data == None, "input must be a LobbyData object"
+    if data is None:
+        assert graph is not None, "either input a LobbyData object or the pre-built graph as a pandas dataframe (kwarg `graph`)"
     self.save_file = save_file
     self.ninja = ninja_postproc
     if issue_codes is not None:
@@ -514,7 +516,7 @@ class LobbyLinks(object):
     self.incl_codes = issue_codes
     
     #self.timeout = DummyTimeout()
-    self.timeout = TimeOutHandler(timeout=5) #sets 10-second timeout for name-matching step
+    self.timeout = TimeOutHandler(timeout=5) #sets 5-second timeout for name-matching step
     
     if legislators_handler is None: 
       #default settings: only legislators who were in office in 1990
@@ -616,7 +618,7 @@ class LobbyLinks(object):
                       ninja_names_ = self.legislator_extractor.extract(ninja_name)
                       #print('ninja', ninja_name, ninja_names_)
                       for name, (_, length) in ninja_names_.items():
-                        #try to find a match among legislators, else passninja
+                        #try to find a match among legislators, else pass
                         last_name = True if length < 2 else False
                         match_fn = lambda: self.legislators.best_match(name, \
                                                 last_name=last_name, \
@@ -736,7 +738,7 @@ class LobbyLinks(object):
                       font_size=12):
     #client_weights: a dictionary with client names to values 
     #	which will be logarithmically rescaled to yield node sizes
-    graph = self.graph
+    graph = self.graph.copy()
     assert group_by in graph.keys()
     if height is None: height = '750px'
     if width is None: width = '1500px'
