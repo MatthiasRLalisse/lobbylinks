@@ -1,8 +1,4 @@
 ###LDA database query from API and build LobbyLinks graph
-
-import requests
-from tqdm import tqdm
-from collections import defaultdict
 from lobbylinks.resources.handlers import IssueCodes, Legislators 	#utilities for handling resources
 from lobbylinks import LobbyData, LobbyLinks	#core utilities
 
@@ -13,7 +9,7 @@ q_auth = None #swap in credentials for LDA API (needed for large queries)
 filing_year = [2022, 2024]
 client_name = 'exxon'
 
-#query the database for lobby report filings
+#query the LDA API for lobby report filings matching search criteria
 lobby_data = LobbyData(q_auth=q_auth, filing_year=filing_year, client_name=client_name, client_country='US') 
 # export filings to csv
 lobby_data.merge_names() #optional: merges client names (e.g. EXXON MOBIL CORPORATE --> EXXON MOBIL)
@@ -25,6 +21,9 @@ lobby_data.activity_summary.to_csv('lobby_filings_summary-by_activity.csv')
 lobby_links = LobbyLinks(lobby_data, verbose_build=False)
 		#if verbose_build, print incremental results
 		#good for spot-checking legislator extraction
+
+# export the graph as a CSV
+lobby_links.graph.to_csv('lobby_graph.csv')
 
 graph_viz = lobby_links.visualize('lobby_graph.html')
 
