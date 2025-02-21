@@ -53,9 +53,9 @@ class LobbyData(object):
   """Supports slicing, addition (filing concatenation), and inplace addition."""
   def __init__(self, save_file=None, query_auth=None, \
                      load_from_save=False, _filings=None, 
-                     paginate_wait=None, **kwargs):
+                     paginate_wait=3, **kwargs):
     self.save_file = save_file
-    assert paginate_wait is None or isinstance(paginate_wait, int)
+    assert paginate_wait is None or isinstance(paginate_wait, (int,float))
     self.paginate_wait = paginate_wait
     if save_file is not None and load_from_save:
       try:
@@ -485,7 +485,7 @@ class ContributionsData(LobbyData):
     _cat_filings = self.filings + b.filings
     return ContributionsData(_filings=_cat_filings)
 
-
+othtitles_ = [ 'Chairman', 'Chair', 'Chrmn', 'Chr', 'Chairwoman', 'Chrwm', 'Chrwmn' ]
 
 class LobbyLinks(object):
   """main object for building client-congress links\n"""
@@ -611,6 +611,12 @@ class LobbyLinks(object):
                                             filing_year=filing_year, \
                                             verbose=verbose_build)
                     match_output = self.timeout.wrap(match_fn)
+                    
+                    for oth in othtitles_:
+                      if match_output is None or match_output[0] is None:
+                        name_ = re.sub(r'^'+oth, '', name, flags=re.IGNORECASE)
+                        if name_ != name:
+                          match_output = self.timeout.wrap(match_fn)
                     
                     # if no results are returned, try a wordninja string split
                     if self.ninja and (match_output is None or match_output[0] is None):
@@ -806,8 +812,6 @@ class LobbyLinks(object):
                           max(client_counts.max(), legislator_counts.max()))
       leg_node_weights = { legislator: rescale(val) for \
                               legislator, val in legislator_weights.items() }
-    
-      #leg_node_weights = 1 + np.log(
     
     if client_weights is None:
       _client_weights = client_counts
