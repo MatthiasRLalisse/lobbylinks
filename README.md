@@ -35,7 +35,9 @@ from lobbylinks import LobbyData
 q_auth = (my_api_username, my_api_key)
 
 filing_year = [ 2024 ]
-lobby_data = LobbyData(q_auth=q_auth, filing_year=filing_year) # scrape all filings for 2024. May take several hours.
+lobby_data = LobbyData(q_auth=q_auth, filing_year=filing_year, paginate_wait=3) # scrape all filings for 2024. May take several hours.
+# `paginate_wait` is set to 3 by default, which controls the rate at which data is streamed from the LDA database.
+# 3 seconds between pages should avoid ratelimits for users with an API key
 lobby_data.merge_names() #optional: merges client names (e.g. EXXON MOBIL CORPORATE --> EXXON MOBIL)
 
 lobby_data.summary.to_csv('lobby_filings_summary.csv') # export summary data for each filing
