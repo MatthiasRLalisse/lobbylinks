@@ -81,9 +81,9 @@ The legislator-matching utility is provided by `lobbylinks.handlers.Legislators`
 
 Lobby Disclosure Act, PUBLIC LAW 104-65-DEC. 19,1995 109 STAT. 691
 ```
-Since there is no temporal sunset clause on the position coverage, one will often find within LDA filings legislators whose term of service has long since passed. Our AI system for string-matching extracts links if a search term matches to *one and only one* legislator within the database, so a conservative strategy is to use the default of 1990, which may miss some links reported by younger lobbyists.
+Since there is no temporal sunset on the position coverage, one will often find within LDA filings legislators whose term of service has long since passed. Our AI system for string-matching extracts links if a search term matches to *one and only one* legislator within the database, so a conservative strategy is to use the default of 1990, which may miss some links reported by younger lobbyists.
 
-Internally, `Sen.` and `Rep.` prefixes occurring within a named entity parse are used to constrain the search to members of the respective chamber, and if multiple matches are found, no match is retrieved. For instance, there is only one, legislator with the name "Kelly" in the Senate, while three House members share that name. If matching to the legislator database, a result is returned only if the chamber `branch='sen'` is specified:
+Internally, `Sen.` and `Rep.` prefixes occurring within a named entity parse are used to constrain the search to members of the respective chamber, and if multiple matches are found, no match is retrieved. For instance, there is only one, legislator with the last name "Kelly" in the Senate, while three House members share that name. If matching to the legislator database, a result is returned only if the chamber `branch='sen'` is specified:
 ```
 legislators = lobbylinks.resources.handlers.Legislators(min_year=2022) # load in legislators from the 118th congress
 
