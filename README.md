@@ -94,7 +94,7 @@ legislators.best_match('Kelly', last_name=True, branch='sen') # returns Mark Kel
 
 legislators.best_match('Kelly', last_name=True, branch='rep') # 3 matching House members, returns None
 ```
-When calling `Legislators` within a `LobbyLinks` graph build, potential legislators are identified using a stringent unique-match criterion, but a good workflow for detailed analyses required manual annotation is to to auto-build the `LobbyLinks` object from a filings dataset, export the graph to csv, make any manual adjustments to the matches, and then load in the pre-built graph to a new `LobbyLinks` object:
+When calling `Legislators` within a `LobbyLinks` graph build, potential legislators are identified using a stringent unique-match criterion, but a good workflow for detailed analyses required manual annotation is to to auto-build the `LobbyLinks` object from a filings dataset, export the graph to csv, make any manual adjustments to the matches or other columns, and then load in the pre-built graph to a new `LobbyLinks` object:
 ```
 lobby_links = LobbyLinks(lobby_filing_data) # filing data should be a `LobbyData` object
 # the graph will be built via name-matching to the legislators
