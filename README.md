@@ -15,7 +15,7 @@ The links to legislators depend on a database maintained by GovTrack, ProPublica
 * `legislators-historical.csv`
 * `legislators-historical.json`
 
-It is OK to overwrite these current contents of the `resources` folder. Note that `legislators-historical` is cumulative, but `legislators-current` is not.
+ Simply overwrite these current contents of the `resources` folder with the updated files. Note that `legislators-historical` is cumulative, but `legislators-current` is not.
 
 ### Installation
 Run the following commands in sequence:
